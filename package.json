@@ -1,15 +1,23 @@
 {
+  "name": "salesforce-chatter-mentions-replacer",
+  "version": "3.0.0",
   "private": true,
-  "name": "web-extension-base",
-  "version": "0.1.0",
-  "description": "description...",
+  "description": "Replace specific strings with mentions in Salesforce chatter.",
+  "homepage": "https://github.com/yabpaseri/salesforce-chatter-mentions-replacer#readme",
+  "bugs": {
+    "url": "https://github.com/yabpaseri/salesforce-chatter-mentions-replacer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yabpaseri/salesforce-chatter-mentions-replacer.git"
+  },
   "license": "MIT",
   "author": "yabpaseri",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build:beta": "tsc && vite build --mode beta",
     "build": "tsc && vite build --mode production",
+    "build:beta": "tsc && vite build --mode beta",
+    "dev": "vite",
     "verup": "npm --no-git-tag-version version"
   },
   "dependencies": {
@@ -17,8 +25,11 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.4",
+    "@mui/x-data-grid": "^6.14.0",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.18",
@@ -38,6 +49,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "prettier": "^3.0.1",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

@@ -1,13 +1,14 @@
 import { crx, defineManifest } from '@crxjs/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { author, description, version as version_name } from './package.json';
 import archive from './plugins/vite-plugin-archive';
 
 const version = version_name.replace(/[^\d.-]+/g, '').replace('-', '.');
 const manifest = defineManifest(({ mode }) => ({
 	manifest_version: 3,
-	name: 'Web Extension Base',
+	name: 'Salesforce chatter mentions replacer',
 	author,
 	description,
 	version,
@@ -18,12 +19,14 @@ const manifest = defineManifest(({ mode }) => ({
 		'48': 'icons/icon48.png',
 		'128': 'icons/icon128.png',
 	},
-	action: { default_popup: 'index.html' },
+	default_locale: 'ja',
+	permissions: ['storage'],
+	options_page: 'pages/options.html',
 }));
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react(), crx({ manifest }), archive()],
+	plugins: [react(), tsconfigPaths(), crx({ manifest }), archive()],
 	build: {
 		minify: false, // chromeの審査に通りやすく
 		rollupOptions: {
