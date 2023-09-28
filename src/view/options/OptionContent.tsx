@@ -66,13 +66,6 @@ class OptionContentImpl extends Component<TProps, TState> {
 
 	/** chrome.storage.syncのデータを読んで、stateに反映する */
 	async readMentions() {
-		// まずは全ての編集状態を止める必要がある。編集中だと、値が反映できない
-		if (this.state.mentions) {
-			const api = this.props.dataGridApi.current;
-			for (const id of this.state.mentions.map((m) => m.id)) {
-				if (api.getRowMode(id) === 'edit') api.stopRowEditMode({ id, ignoreModifications: true });
-			}
-		}
 		// 最新の値を取得して反映する
 		const mentions = await MentionDao.readAsLenient();
 		const changed = this.state.mentions != null && JSON.stringify(this.state.mentions) !== JSON.stringify(mentions);
