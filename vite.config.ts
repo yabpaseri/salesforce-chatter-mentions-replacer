@@ -20,8 +20,21 @@ const manifest = defineManifest(({ mode }) => ({
 		'128': 'icons/icon128.png',
 	},
 	default_locale: 'ja',
-	permissions: ['storage'],
+	permissions: ['storage', 'tabs'],
+	background: {
+		service_worker: 'src/background.ts',
+		type: 'module',
+	},
+	content_scripts: [
+		{
+			matches: ['https://*.my.salesforce.com/*', 'https://*.lightning.force.com/*'],
+			js: ['src/common/index.ts', 'src/content.ts'],
+		},
+	],
 	options_page: 'pages/options.html',
+	action: {
+		default_popup: 'pages/popup.html',
+	},
 }));
 
 // https://vitejs.dev/config/

@@ -1,0 +1,101 @@
+{
+	"ADD": {
+		"message": "Add"
+	},
+	"ADDED": {
+		"message": "Added!!"
+	},
+	"ALREADY_EXIST_ENV_KEY": {
+		"message": "This combination of Environment and Replacement characters is used"
+	},
+	"DATAGRID_COLUMN_MENU_LABEL": {
+		"message": "Menu"
+	},
+	"DATAGRID_COLUMN_HEADER_SORT_ICON_LABEL": {
+		"message": "Sort"
+	},
+	"DATAGRID_COLUMN_MENU_SORT_ASC": {
+		"message": "Sort by ASC"
+	},
+	"DATAGRID_COLUMN_MENU_SORT_DESC": {
+		"message": "Sort by DESC"
+	},
+	"DATAGRID_COLUMN_MENU_UNSORT": {
+		"message": "Unsort"
+	},
+	"DATAGRID_COLUMN_MENU_FILTER": {
+		"message": "Filter"
+	},
+	"DATAGRID_COLUMN_HEADER_FILTERS_TOOLTIP_ACTIVE": {
+		"message": "$1 active filter"
+	},
+	"DATAGRID_FILTER_PANEL_COLUMNS": {
+		"message": "Columns"
+	},
+	"DATAGRID_FILTER_PANEL_OPERATOR": {
+		"message": "Operator"
+	},
+	"DATAGRID_FILTER_PANEL_INPUT_LABEL": {
+		"message": "Value"
+	},
+	"DATAGRID_FILTER_PANEL_INPUT_PLACEHOLDER": {
+		"message": "Filter value"
+	},
+	"DATAGRID_FILTER_OPERATOR_CONTAINS": {
+		"message": "contains"
+	},
+	"DATAGRID_FILTER_OPERATOR_EQUALS": {
+		"message": "equals"
+	},
+	"DATAGRID_FILTER_OPERATOR_STARTS_WITH": {
+		"message": "starts with"
+	},
+	"DATAGRID_FILTER_OPERATOR_ENDS_WITH": {
+		"message": "ends with"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_EMPTY": {
+		"message": "is empty"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_NOT_EMPTY": {
+		"message": "is not empty"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_ANY_OF": {
+		"message": "is any of"
+	},
+	"ERROR_INVALID_FORMAT_SFID": {
+		"message": "$1 is not in the Salesforce ID (15 or 18 alphanumeric characters) format"
+	},
+	"ERROR_INVALID_FORMAT_URL": {
+		"message": "$1 is not the format of the URL"
+	},
+	"ERROR_INVALID_TYPE_STRING": {
+		"message": "$1 is not a string"
+	},
+	"ERROR_REQUIRED": {
+		"message": "$1 is required"
+	},
+	"MENTION_RELOADED": {
+		"message": "Reloaded because changes were detected"
+	},
+	"NOT_ALLOW_BLANK": {
+		"message": "Blank spaces are not allowed"
+	},
+	"OPTIONS": {
+		"message": "Options"
+	},
+	"SAVED": {
+		"message": "Saved!!"
+	},
+	"TYPES_MENTION_ENV": {
+		"message": "Environment"
+	},
+	"TYPES_MENTION_KEY": {
+		"message": "Replacement characters"
+	},
+	"TYPES_MENTION_NAME": {
+		"message": "User Name"
+	},
+	"TYPES_MENTION_SFID": {
+		"message": "User ID"
+	}
+}

@@ -1,0 +1,105 @@
+{
+	"ADD": {
+		"message": "追加"
+	},
+	"ADDED": {
+		"message": "追加しました"
+	},
+	"ALREADY_EXIST_ENV_KEY": {
+		"message": "この適用環境と置換する文字の組み合わせは使用されています"
+	},
+	"DATAGRID_COLUMN_MENU_LABEL": {
+		"message": "メニュー"
+	},
+	"DATAGRID_COLUMN_HEADER_SORT_ICON_LABEL": {
+		"message": "ソート"
+	},
+	"DATAGRID_COLUMN_MENU_SORT_ASC": {
+		"message": "昇順"
+	},
+	"DATAGRID_COLUMN_MENU_SORT_DESC": {
+		"message": "降順"
+	},
+	"DATAGRID_COLUMN_MENU_UNSORT": {
+		"message": "ソート解除"
+	},
+	"DATAGRID_COLUMN_MENU_FILTER": {
+		"message": "フィルター"
+	},
+	"DATAGRID_COLUMN_HEADER_FILTERS_TOOLTIP_ACTIVE": {
+		"message": "$1つの適用されたフィルター"
+	},
+	"DATAGRID_FILTER_PANEL_COLUMNS": {
+		"message": "カラム"
+	},
+	"DATAGRID_FILTER_PANEL_OPERATOR": {
+		"message": "演算子"
+	},
+	"DATAGRID_FILTER_PANEL_INPUT_LABEL": {
+		"message": "値"
+	},
+	"DATAGRID_FILTER_PANEL_INPUT_PLACEHOLDER": {
+		"message": "フィルター値"
+	},
+	"DATAGRID_FILTER_OPERATOR_CONTAINS": {
+		"message": "～を含む"
+	},
+	"DATAGRID_FILTER_OPERATOR_EQUALS": {
+		"message": "～と等しい"
+	},
+	"DATAGRID_FILTER_OPERATOR_STARTS_WITH": {
+		"message": "～で始まる"
+	},
+	"DATAGRID_FILTER_OPERATOR_ENDS_WITH": {
+		"message": "～で終わる"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_EMPTY": {
+		"message": "～が空"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_NOT_EMPTY": {
+		"message": "～が空ではない"
+	},
+	"DATAGRID_FILTER_OPERATOR_IS_ANY_OF": {
+		"message": "～のいずれか"
+	},
+	"ERROR_INVALID_FORMAT_SFID": {
+		"message": "$1がSalesforceのIDの形式(15文字か18文字の英数字)ではありません"
+	},
+	"ERROR_INVALID_FORMAT_URL": {
+		"message": "$1がURLの形式ではありません"
+	},
+	"ERROR_INVALID_TYPE_STRING": {
+		"message": "$1が文字列型ではありません"
+	},
+	"ERROR_REQUIRED": {
+		"message": "$1は必須項目です"
+	},
+	"MENTION_RELOADED": {
+		"message": "変更を検知したため、再読込しました"
+	},
+	"NOT_ALLOW_BLANK": {
+		"message": "空欄は許可されていません"
+	},
+	"OPTIONS": {
+		"message": "設定"
+	},
+	"SAVED": {
+		"message": "保存しました"
+	},
+	"TYPES_MENTION_ENV": {
+		"message": "適用環境",
+		"description": "型名(MentionEnv)"
+	},
+	"TYPES_MENTION_KEY": {
+		"message": "置換する文字",
+		"description": "型名(MentionKey)"
+	},
+	"TYPES_MENTION_NAME": {
+		"message": "ユーザー名",
+		"description": "型名(MentionName)"
+	},
+	"TYPES_MENTION_SFID": {
+		"message": "ユーザーID",
+		"description": "型名(MentionSfid)"
+	}
+}
