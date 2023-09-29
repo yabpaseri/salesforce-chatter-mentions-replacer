@@ -142,7 +142,8 @@ import { MentionDao } from './dao';
 	#textSplitWithKey(text: Text, key: string): { matched: Set<Text>; others: Set<Text> } {
 		const matched = new Set<Text>();
 		const others = new Set<Text>();
-		const searchRegex = new RegExp(`(^${key}(?=\\s)|(?<=\\s)${key}$|(?<=\\s)${key}(?=\\s)|^${key}$)`);
+		const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const searchRegex = new RegExp(`(^${escapedKey}(?=\\s)|(?<=\\s)${escapedKey}$|(?<=\\s)${escapedKey}(?=\\s)|^${escapedKey}$)`);
 		const process = (text: Text) => {
 			if (text.textContent == null || text.textContent === '') return; // do nothing
 			const index = text.textContent.search(searchRegex);
