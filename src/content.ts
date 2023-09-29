@@ -142,11 +142,10 @@ import { MentionDao } from './dao';
 	#textSplitWithKey(text: Text, key: string): { matched: Set<Text>; others: Set<Text> } {
 		const matched = new Set<Text>();
 		const others = new Set<Text>();
+		const searchRegex = new RegExp(`(^${key}(?=\\s)|(?<=\\s)${key}$|(?<=\\s)${key}(?=\\s)|^${key}$)`);
 		const process = (text: Text) => {
 			if (text.textContent == null || text.textContent === '') return; // do nothing
-			// TODO: 前後に空白 or 文頭+後空白 or 文末+前空白 の 正規表現に一致する場合のみにしたい。
-			// String.prototype.search(Regexp)
-			const index = text.textContent.indexOf(key);
+			const index = text.textContent.search(searchRegex);
 			if (index < 0) {
 				others.add(text);
 				return;
