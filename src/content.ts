@@ -20,7 +20,7 @@ import { MentionDao } from './dao';
 		const mentions = (await MentionDao.readAsStrict()).reduce((map, mention) => {
 			// 末尾のスラッシュは許容
 			if (mention.env === origin || mention.env === `${origin}/`) {
-				keys.push(mention.key); // 適用順の維持が目的 // TODO:過去の名残。同一のenv-keyの組み合わせを原則認めていないので維持しなくていいかも。
+				keys.push(mention.key); // 適用順の維持が目的。zoo,fizzの順に登録されていて、 fizzooと打たれたら、fiz@[zoo]になる漢字。良いのかな...
 				map.set(mention.key, mention);
 			}
 			return map;
@@ -103,22 +103,76 @@ import { MentionDao } from './dao';
 		}
 	}
 	#texts(text: Text) {
+		// "fizzbuzzfoobar" の 1つのTextを bar→fizz の順でメンション変換を適用する時を考える。
+		// 以前は Text.textContent.replaceAll で keyを <span/> の文字列に置換し、適当な要素のinnerHTMLとすることでタグに変えていた。
+		// ただ、 https://github.com/yabpaseri/salesforce-chatter-mentions-replacer/issues/1 にも書いた通り、HTMLインジェクションが可能になってしまう。
+		// sfidは 15or18文字の英数字で制限しているので問題ないが、nameでインジェクション可能。
+		// ということで、"fizzbuzzfoobar" → "fizzbuzzfoo""bar" → "fizz""buzzfoo""bar" のように複数Textに分割してから、
+		// textContentがkeyと一致するTextをreplaceWithでHTMLSpanElementと置換してやる必要がある。
 		if (text.textContent == null) return;
+		const matched = new Set<Text>();
+		const remain = new Set<Text>([text]);
 		for (const key of this.#keys) {
-			const data = this.#mentions.get(key);
-			if (data == null) continue;
-			const before = text.textContent;
-			const after = before.replaceAll(
-				key,
-				`<span class="ql-chatter-mention quill_widget_element" contenteditable="false" tabindex="-1" data-widget="chatterMention" data-mention="${data.sfid}">@[${data.name}]</span>&ZeroWidthSpace;&nbsp;`,
-			);
-			if (before !== after) {
-				const tmp = document.createElement('div');
-				tmp.innerHTML = after;
-				this.#execute(tmp); // 作られたspanタグなどを考慮して、tmpごと再解析
-				text.replaceWith(...tmp.childNodes);
-				break; // 残りのメンションは、全て this.#execute を呼び出したことで構築されているはず。breakでOK
+			// textSplitWithKey でText内の全keyは分割させるので、この時点での Text さえ見られば良い。
+			const mirror = [...remain];
+			remain.clear();
+			for (const re of mirror) {
+				const res = this.#textSplitWithKey(re, key);
+				for (const m of res.matched) matched.add(m);
+				for (const o of res.others) remain.add(o);
 			}
 		}
+
+		// matched内のTextだけ、一致するものにreplaceしていく。
+		for (const target of matched) {
+			const data = this.#mentions.get(target.textContent ?? '');
+			if (data) target.replaceWith(this.#createMentionElement(data));
+		}
+	}
+
+	/**
+	 * Textをkeyに完全一致する箇所で区切り返却する  \
+	 * Text="fizzbuzzfoofizzbar", key="fizz" だとすると、
+	 * {matched: ["fizz", "fizz"], others: ["buzzfoo", "bar"]}
+	 * が返却される
+	 * @param text
+	 * @param key
+	 * @returns 分割結果
+	 */
+	#textSplitWithKey(text: Text, key: string): { matched: Set<Text>; others: Set<Text> } {
+		const matched = new Set<Text>();
+		const others = new Set<Text>();
+		const process = (text: Text) => {
+			if (text.textContent == null || text.textContent === '') return; // do nothing
+			// TODO: 前後に空白 or 文頭+後空白 or 文末+前空白 の 正規表現に一致する場合のみにしたい。
+			// String.prototype.search(Regexp)
+			const index = text.textContent.indexOf(key);
+			if (index < 0) {
+				others.add(text);
+				return;
+			}
+			const target = (() => {
+				if (index === 0) return text;
+				const t = text.splitText(index); // splitTextは、分割した前半が元の要素(text)の値に、後半が返却値になる
+				others.add(text);
+				return t;
+			})();
+			const remain = target.splitText(key.length); // これで、targetがkey分だけのTextになった
+			matched.add(target);
+			process(remain); // 残部分は再帰
+		};
+		process(text);
+		return { matched, others };
+	}
+
+	#createMentionElement(mention: Mention): HTMLSpanElement {
+		const span = document.createElement('span');
+		span.classList.add('ql-chatter-mention', 'quill_widget_element');
+		span.contentEditable = 'false';
+		span.tabIndex = -1;
+		span.setAttribute('data-widget', 'chatterMention');
+		span.setAttribute('data-mention', mention.sfid);
+		span.textContent = `@[${mention.name}]`;
+		return span;
 	}
 }).main();
