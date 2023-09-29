@@ -8,7 +8,7 @@ import archive from './plugins/vite-plugin-archive';
 const version = version_name.replace(/[^\d.-]+/g, '').replace('-', '.');
 const manifest = defineManifest(({ mode }) => ({
 	manifest_version: 3,
-	name: 'Salesforce chatter mentions replacer',
+	name: `${mode !== 'production' ? '【DEV】' : ''}Salesforce chatter mentions replacer`,
 	author,
 	description,
 	version,
