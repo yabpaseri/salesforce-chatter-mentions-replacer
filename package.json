@@ -1,6 +1,6 @@
 {
   "name": "salesforce-chatter-mentions-replacer",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "private": true,
   "description": "Replace specific strings with mentions in Salesforce chatter.",
   "homepage": "https://github.com/yabpaseri/salesforce-chatter-mentions-replacer#readme",
