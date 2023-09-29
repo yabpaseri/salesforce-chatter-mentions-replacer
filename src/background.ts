@@ -1,43 +1,37 @@
 (function main() {
-	const USER_SFID_REGEX = /(?<=User\/).+(?=\/view)/;
-	const REGEX_SFORCE_URL = [
-		/^https:\/\/.+\.my\.salesforce\.com\/lightning\/r\/User\/.+\/view/,
-		/^https:\/\/.+\.lightning\.force\.com\/lightning\/r\/User\/.+\/view/,
-	] as const;
+	const SALESFORCE_ENVIROMENT_URL_REGEX = /https:\/\/.+\.(my\.salesforce|lightning\.force)\.com/;
+	const SFID_PICKABLE_URL_REGEX = /https:\/\/.+\.(my\.salesforce|lightning\.force)\.com\/lightning\/r\/(User|CollaborationGroup)\/.+\/view/;
+	const SFID_PICK_REGEX = /(?<=(User|CollaborationGroup)\/).+(?=\/view)/;
 
-	// chrome.actionのpopupページを切り替える
-	function updateAction(url: string, title: string) {
-		const base = chrome.runtime.getURL('pages/popup.html');
-		const matched = (() => {
-			for (const r of REGEX_SFORCE_URL) {
-				if (r.test(url)) return true;
-			}
-			return false;
-		})();
-		if (matched) {
+	function updateActionPopup(url: string, title: string) {
+		const baseURL = chrome.runtime.getURL('pages/popup.html');
+		if (SALESFORCE_ENVIROMENT_URL_REGEX.test(url)) {
 			const params = new URLSearchParams();
-			const sfid = url.match(USER_SFID_REGEX)?.[0] ?? '';
-			const name = title.split('|')[0].trim() || '';
 			params.set('env', new URL(url).origin);
-			params.set('key', `@{${name}}`);
-			params.set('name', name);
-			params.set('sfid', sfid);
-			const popup = `${base}?${params.toString()}`;
+			if (SFID_PICKABLE_URL_REGEX.test(url)) {
+				const name = title.split('|')[0].trim() || '';
+				const sfid = url.match(SFID_PICK_REGEX)?.[0] ?? '';
+				params.set('key', `@{${name}}`);
+				params.set('name', name);
+				params.set('sfid', sfid);
+			}
+			const popup = `${baseURL}?${params.toString()}`;
 			chrome.action.setPopup({ popup });
 		} else {
-			chrome.action.setPopup({ popup: base });
+			chrome.action.setPopup({ popup: baseURL });
 		}
 	}
+
 	chrome.tabs.onActivated.addListener((activeInfo) => {
 		chrome.tabs.get(activeInfo.tabId, (tab) => {
 			const url = tab.url;
 			const title = tab.title || '';
-			if (url) updateAction(url, title);
+			if (url) updateActionPopup(url, title);
 		});
 	});
 	chrome.tabs.onUpdated.addListener((_, changeInfo, tab) => {
 		const url = changeInfo.url || tab.url;
 		const title = changeInfo.title || tab.title || '';
-		if (tab.active && url) updateAction(url, title);
+		if (tab.active && url) updateActionPopup(url, title);
 	});
 })();
