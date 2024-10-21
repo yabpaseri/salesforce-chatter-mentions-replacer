@@ -1,3 +1,5 @@
+import { format as formatDate, setDefaultOptions } from 'date-fns';
+import { ja } from 'date-fns/locale';
 import { Mention } from '~/types/mention';
 import { Caret } from '~/util';
 import { MentionDao } from './dao';
@@ -5,6 +7,10 @@ import { MentionDao } from './dao';
 (class Lex {
 	public static async main() {
 		const instance = new Lex();
+		const language = chrome.i18n.getUILanguage();
+		if (language.includes('ja')) {
+			setDefaultOptions({ locale: ja }); // japanese
+		}
 		chrome.storage.sync.onChanged.addListener((changes) => {
 			if (MentionDao.KEY in changes) instance.#update();
 		});
@@ -12,8 +18,9 @@ import { MentionDao } from './dao';
 		instance.#installEventHandler();
 	}
 
-	#keys: string[] = [];
-	#mentions: Map<string, Mention> = new Map();
+	#keys!: string[];
+	#mentions!: Map<string, Mention>;
+	#lastExecutionDate!: Date;
 	async #update() {
 		const origin = window.location.origin;
 		const keys: string[] = [];
@@ -74,7 +81,10 @@ import { MentionDao } from './dao';
 		);
 	}
 
-	#execute(root: Element) {
+	#execute(root: Element, recursive = false) {
+		// 最終実行日時を更新する(再帰処理の場合は除く)
+		if (!recursive) this.#lastExecutionDate = new Date();
+
 		const childNodes = root.childNodes;
 		for (const node of childNodes) {
 			switch (node.nodeType) {
@@ -99,7 +109,7 @@ import { MentionDao } from './dao';
 			case element.tagName === 'CODE': //           | <code/>
 				return;
 			default:
-				this.#execute(element);
+				this.#execute(element, true);
 		}
 	}
 	#texts(text: Text) {
@@ -127,6 +137,17 @@ import { MentionDao } from './dao';
 		for (const target of matched) {
 			const data = this.#mentions.get(target.textContent ?? '');
 			if (data) target.replaceWith(this.#createMentionElement(data));
+		}
+
+		const mirror = [...remain];
+		remain.clear();
+		for (const re of mirror) {
+			const res = this.#textSplitWithCommand(re);
+			for (const c of res.commands) {
+				const executed = this.#executeCommand(c);
+				if (executed != null) c.text.replaceWith(executed);
+			}
+			for (const o of res.others) remain.add(o);
 		}
 	}
 
@@ -175,4 +196,44 @@ import { MentionDao } from './dao';
 		span.textContent = `@[${mention.name}]`;
 		return span;
 	}
+
+	#textSplitWithCommand(text: Text): { commands: Command[]; others: Set<Text> } {
+		const commands = new Array<Command>();
+		const others = new Set<Text>();
+		const searchRegex = /(?<=^|\s)\$\{([a-zA-Z0-9]+?)(,([^}]+?))?\}(?=$|\s)/;
+		const process = (text: Text) => {
+			if (text.textContent == null || text.textContent === '') return; // do nothing
+			const matched = text.textContent.match(searchRegex);
+			if (matched == null) {
+				others.add(text);
+				return;
+			}
+			const target = (() => {
+				if (matched.index === 0 || matched.index == null) return text;
+				const t = text.splitText(matched.index); // splitTextは、分割した前半が元の要素(text)の値に、後半が返却値になる
+				others.add(text);
+				return t;
+			})();
+			const remain = target.splitText(matched[0].length);
+			commands.push({ text: target, type: matched[1]?.trim(), args: matched[3]?.trim() });
+			process(remain); // 残部分は再帰
+		};
+		process(text);
+		return { commands, others };
+	}
+
+	#executeCommand(command: Command): string | Node | undefined {
+		switch (command.type) {
+			case 'today': {
+				try {
+					return formatDate(this.#lastExecutionDate, command.args ?? '');
+				} catch {
+					return;
+				}
+			}
+		}
+		return;
+	}
 }).main();
+
+type Command = { text: Text; type: string; args?: string };
