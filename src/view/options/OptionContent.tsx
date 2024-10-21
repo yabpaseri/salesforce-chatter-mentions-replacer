@@ -191,10 +191,10 @@ class OptionContentImpl extends Component<TProps, TState> {
 	}
 	override render(): ReactNode {
 		return (
-			<Box flexGrow={1}>
+			<Box flexGrow={1} overflow="auto">
 				<DataGrid
 					apiRef={this.props.dataGridApi}
-					autoPageSize
+					hideFooter
 					disableColumnSelector
 					disableRowSelectionOnClick
 					editMode="row"

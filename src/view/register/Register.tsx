@@ -39,7 +39,7 @@ export class Register extends Component<TProps, TState> {
 	#handleNameChange = this.#handleChange.bind(this, 'name');
 	#handleSfidChange = this.#handleChange.bind(this, 'sfid');
 	#handleChange(key: string, value: string) {
-		const state: Partial<TState> = { [key]: value, error: void 0 };
+		const state: Partial<TState> = { [key]: value.trim(), error: void 0 };
 		this.setState(state as TState);
 	}
 
